@@ -5,7 +5,7 @@ const password = document.getElementById('password')
 const password2 = document.getElementById('password2')
 
 // Show input error message
-function showError(input, message){
+const showError = (input, message) => {
     const formControl = input.parentElement
     formControl.className = 'form-control error'
     const small = formControl.querySelector('small')
@@ -13,45 +13,34 @@ function showError(input, message){
 }
 
 // Show success outline
-function showSuccess(input){
+const showSuccess = (input) => {
     const formControl = input.parentElement
     formControl.className = 'form-control success'
 }
 
 // Check email is valid
-function isValidEmail(email){
+const isValidEmail = (email) => {
     const regularExpression = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return regularExpression.test(String(email).toLowerCase());
+}
+
+// Check required fields
+const checkRequired = (inputArr) => {
+    inputArr.forEach((input) => {
+        if (input.value.trim() === '') {
+            showError(input, `${getFieldName(input)} is required`)
+        } else {
+            showSuccess(input)
+        }
+    })
+}
+
+const getFieldName = (input) => {
+    return input.id.charAt(0).toUpperCase() + input.id.slice(1)
 }
 
 // Event Listeners
 form.addEventListener('submit', function(e){
     e.preventDefault()
-
-    if(username.value === ''){
-        showError(username, 'username required')
-    } else {
-        showSuccess(username)
-    }
-
-    if(email.value === ''){
-        showError(email, 'email required')
-    } else if(!isValidEmail(email.value)){
-        showError(email, 'email is not valid')
-    }
-     else {
-        showSuccess(email)
-    }
-
-    if(password.value === ''){
-        showError(password, 'email required')
-    } else {
-        showSuccess(password)
-    }
-
-    if(password2.value === ''){
-        showError(password2, 'email required')
-    } else {
-        showSuccess(password2)
-    }
+    checkRequired([username, email, password, password2])
 })
